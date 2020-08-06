@@ -1,30 +1,16 @@
 package com.selfdone.spark.examples
-
-import java.util.Properties
 import java.util.logging.Logger
 
-import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-import scala.io.Source
-
-object Example4 extends Serializable {
+object Example4UnderstandDAG extends Serializable {
 
   @transient lazy val logger:Logger = Logger.getLogger(getClass.getName)
   def main(args: Array[String]): Unit = {
-
-
     logger.info("Started Spark Processing")
-
-    //Get Configuration from Spark Conf
-    //val spark = SparkSession.builder().config(getSparkConf).getOrCreate()
-
-
     val spark=SparkSession.builder()
       .appName("Understanding DAG")
       .master("local[*]")
-      //comment and run to see the default size as 200
-      .config("spark.sql.shuffle.partitions",2)
       .getOrCreate()
     val dfRawData = LoadSampleData(spark,args(0))
 
@@ -54,13 +40,5 @@ object Example4 extends Serializable {
     spark.read
       .option("header","true")
       .option("inferSchema","true").csv(path)
-  }
-
-  def getSparkConf: SparkConf= {
-   val sprkConf= new SparkConf
-      val prop =new Properties()
-      prop.load(Source.fromFile("spark.conf").bufferedReader())
-
-    sprkConf
   }
 }

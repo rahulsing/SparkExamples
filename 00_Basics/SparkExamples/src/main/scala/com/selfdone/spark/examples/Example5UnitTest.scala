@@ -1,31 +1,17 @@
 package com.selfdone.spark.examples
 
-import java.util.Properties
 import java.util.logging.Logger
 
-import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}
 
-import scala.io.Source
+object Example5UnitTest extends  Serializable {
+@transient lazy val logger:Logger=Logger.getLogger(getClass.getName)
 
-object Example4 extends Serializable {
 
-  @transient lazy val logger:Logger = Logger.getLogger(getClass.getName)
   def main(args: Array[String]): Unit = {
 
+    val spark=SparkSession.builder().master("local[3]").appName("Spark Unit Testing").getOrCreate()
 
-    logger.info("Started Spark Processing")
-
-    //Get Configuration from Spark Conf
-    //val spark = SparkSession.builder().config(getSparkConf).getOrCreate()
-
-
-    val spark=SparkSession.builder()
-      .appName("Understanding DAG")
-      .master("local[*]")
-      //comment and run to see the default size as 200
-      .config("spark.sql.shuffle.partitions",2)
-      .getOrCreate()
     val dfRawData = LoadSampleData(spark,args(0))
 
     //partition the inital raw file
@@ -41,6 +27,11 @@ object Example4 extends Serializable {
     logger.info("Stopped Spark Processing")
     spark.stop()
   }
+  def LoadSampleData(spark: SparkSession, path:String): DataFrame = {
+    spark.read
+      .option("header","true")
+      .option("inferSchema","true").csv(path)
+  }
 
   def getCountByCountry(dfSampleData: DataFrame) : DataFrame = {
     dfSampleData.where("age < 40")
@@ -49,18 +40,5 @@ object Example4 extends Serializable {
       .groupBy("Country")
 
       .count()
-  }
-  def LoadSampleData(spark: SparkSession, path:String): DataFrame = {
-    spark.read
-      .option("header","true")
-      .option("inferSchema","true").csv(path)
-  }
-
-  def getSparkConf: SparkConf= {
-   val sprkConf= new SparkConf
-      val prop =new Properties()
-      prop.load(Source.fromFile("spark.conf").bufferedReader())
-
-    sprkConf
   }
 }
