@@ -1,5 +1,6 @@
 package com.selfdone.spark.examples
 
+import java.nio.file.Paths
 import java.util.Properties
 import java.util.logging.Logger
 
@@ -19,6 +20,7 @@ object Example4 extends Serializable {
     //Get Configuration from Spark Conf
     //val spark = SparkSession.builder().config(getSparkConf).getOrCreate()
 
+    System.setProperty("hadoop.home.dir",Paths.get(".").toAbsolutePath.toString+ "\\hadoop")
 
     val spark=SparkSession.builder()
       .appName("Understanding DAG")
