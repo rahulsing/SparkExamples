@@ -1,5 +1,3 @@
 */target/**
 *.class
 *.xml
-target/
-.idea/
