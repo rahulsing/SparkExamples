@@ -1,0 +1,26 @@
+---network socket
+    --write
+top -bn 20 |  gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' | nc -l localhost 3000
+    --read
+nc localhost 3000
+
+--sample in log file
+top -bn 20 |  gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' > top_output.log
+
+--tcpdump
+tcpdump |  gawk '{ print strftime("[%Y-%m-%d %H:%M:%S]"), $0 }' > tcp_output.log
+
+tcpdump -c 5 -A
+tcpdump -c 5 -XX - wlo1
+tcpdump port 22
+
+---type of data
+batch id: 1
+top - 23:21:16 up 55 min,  2 users,  load average: 0.05, 0.04, 0.05
+Tasks: 182 total,   1 running, 181 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.0 us,  0.0 sy,  0.0 ni,100.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st
+KiB Mem :  3880256 total,  2907588 free,   468268 used,   504400 buff/cache
+KiB Swap:  9437180 total,  9437180 free,        0 used.  3178360 avail Mem
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 1661 root      20   0 1469480  54332   3096 S   6.2  1.4   0:11.19 cmf-agent
