@@ -38,6 +38,7 @@ object SparkLinuxLog extends Serializable {
   def main(args: Array[String]): Unit = {
     System.setProperty("hadoop.home.dir",System.getProperty("user.dir")+"\\hadoop\\")
 
+    val logPath=System.getProperty("user.dir")+"\\data\\top_output.log"
 
     //val spark=SparkSession.builder().master("local[*]").appName("Linux Log processing").getOrCreate()
 
@@ -53,7 +54,9 @@ object SparkLinuxLog extends Serializable {
 
      //spark.sparkContext.wholeTextFiles("file:///C:\\Rahul\\Personal\\Learning\\BigData\\Spark\\Github\\SparkRawbase\\SparkESTwitter\\data\\top_output.log").foreach(println)
 
-    val log_rdd=spark.sparkContext.textFile("file:///C:\\Rahul\\Personal\\Learning\\BigData\\Spark\\Github\\SparkRawbase\\SparkESTwitter\\data\\top_output.log")
+    //val log_rdd=spark.sparkContext.textFile("file:///C:\\Rahul\\Personal\\Learning\\BigData\\Spark\\Github\\SparkRawbase\\SparkESTwitter\\data\\top_output.log")
+    println(logPath)
+    val log_rdd=spark.sparkContext.textFile("file:///"+logPath)
 
     val task_rdd=log_rdd.filter(x=>x.contains("Tasks:"))
     val top_rdd=log_rdd.filter(x=>x.contains("top "))
